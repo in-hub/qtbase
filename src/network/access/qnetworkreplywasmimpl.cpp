@@ -223,10 +223,12 @@ void QNetworkReplyWasmImplPrivate::doSendRequest()
     if (headersData.count() > 0) {
         int i = 0;
         for (int j = 0; j < headersData.count(); j++) {
-            customHeaders[i] = headersData[j].constData();
-            i += 1;
-            customHeaders[i] = request.rawHeader(headersData[j]).constData();
-            i += 1;
+            if(headersData[j] != QByteArrayLiteral("Content-Length")) {
+                customHeaders[i] = headersData[j].constData();
+                i += 1;
+                customHeaders[i] = request.rawHeader(headersData[j]).constData();
+                i += 1;
+            }
         }
         customHeaders[i] = nullptr;
         attr.requestHeaders = customHeaders;
