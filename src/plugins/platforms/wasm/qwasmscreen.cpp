@@ -222,8 +222,10 @@ void QWasmScreen::updateQScreenAndCanvasRenderSize()
 
 void QWasmScreen::canvasResizeObserverCallback(emscripten::val entries, emscripten::val)
 {
-    int count = entries["length"].as<int>();
-    if (count == 0)
+    if (entries.isUndefined())
+        return;
+    const auto entriesLength = entries["length"];
+    if (entriesLength.isUndefined() || entriesLength.as<int>() == 0)
         return;
     emscripten::val entry = entries[0];
     QWasmScreen *screen =
